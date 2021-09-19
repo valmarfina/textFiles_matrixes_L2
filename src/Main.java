@@ -81,7 +81,6 @@ public class Main {
       //функция вывод массива
       printToFileFirst(myMass, writer);
 
-
       writer.write("поворот матрицы на 90 градусов против часовой стрелки" + '\n');
       printToFile(turn90Mass(myMass), writer);
 
