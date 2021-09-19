@@ -24,13 +24,13 @@ public class Main {
 
   //поворот матрицы на 90 градусов против часов стрелки
   public static int[][] turn90Mass(int[][] myMass) {
-     if (myMass.length == 0) return myMass;
+    if (myMass.length == 0) return myMass;
 
     int rows = myMass.length, cols = myMass[0].length;
     int[][] result = new int[cols][rows];
 
-    for(int row = 0; row < cols; row++) {
-      for(int col = 0; col < rows; col++) {
+    for (int row = 0; row < cols; row++) {
+      for (int col = 0; col < rows; col++) {
         result[row][col] = myMass[col][rows - row - 1];
       }
     }
@@ -45,6 +45,24 @@ public class Main {
     outputWriter.close();
   }
 
+  //запись в файл
+  public static void printToFileFirst(int[][] myMass, FileWriter writer) throws Exception {
+    for (int[] elements : myMass) {
+      writer.write(Arrays.toString(elements) + '\n');
+    }
+    writer.write('\n');
+  }
+
+
+  //запись в файл
+  private static void printToFile(int[][] turn90Mass, FileWriter writer) throws IOException {
+    for (int[] elements : turn90Mass) {
+      writer.write(Arrays.toString(elements) + '\n');
+    }
+    writer.write('\n');
+  }
+
+
   public static void main(String[] args) {
     try {
 
@@ -52,30 +70,34 @@ public class Main {
       Scanner scanner = new Scanner(new File("D:\\study\\POLYTEC\\ява\\лабы\\labs\\textFiles_matrixes\\src\\file.txt"));
       int N = scanner.nextInt();
 
-      //массив который заполним радомно
-      int[][] myMass = new int[N][N];
-
-      //функция заполняет массив случайными числами от -N до N
-      randomFill(myMass, N);
-      //функция вывод массива
-      printMass(myMass);
-
-      //поворот матрицы на 90 градусов и печать в консоль
-      printMass(turn90Mass(myMass));
-      //поворот матрицы на 180 градусов и печать в консоль
-      printMass(turn90Mass(turn90Mass(myMass)));
-      //поворот матрицы на 270 градусов и печать в консоль
-      printMass(turn90Mass(turn90Mass(turn90Mass(myMass))));
-
-
       //запись в файл NOT DONE
       FileWriter writer = new FileWriter("file_out.txt");
-      writer.write("hello world");
-      writer.write("hello world");
+
+      //массив который заполним радомно
+      int[][] myMass = new int[N][N];
+      //функция заполняет массив случайными числами от -N до N
+      randomFill(myMass, N);
+
+      writer.write("полученная матрица из элементов " + N + " на " + N + '\n');
+      //функция вывод массива
+      printToFileFirst(myMass, writer);
+
+
+      writer.write("поворот матрицы на 90 градусов против часовой стрелки" + '\n');
+      printToFile(turn90Mass(myMass), writer);
+
+      writer.write("поворот матрицы на 180 градусов против часовой стрелки" + '\n');
+      printToFile(turn90Mass(turn90Mass(myMass)), writer);
+
+      writer.write("поворот матрицы на 270 градусов против часовой стрелки" + '\n');
+      printToFile(turn90Mass(turn90Mass(turn90Mass(myMass))), writer);
+
       writer.close();
 
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
+
+
 }
