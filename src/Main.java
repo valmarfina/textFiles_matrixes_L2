@@ -53,7 +53,6 @@ public class Main {
     writer.write('\n');
   }
 
-
   //запись в файл
   private static void printToFile(int[][] turn90Mass, FileWriter writer) throws IOException {
     for (int[] elements : turn90Mass) {
