@@ -24,8 +24,8 @@ public class Main {
   }
 
   //поворот матрицы на 90 градусов против часов стрелки
-  public static void turn90Mass(double[][] myMass) {
-    if (myMass.length == 0) return;
+  public static void turn90Mass(double[][] myMass) throws myException {
+    if (myMass.length == 0) throw new myException("mass's length is not correct");
 
     int rows = myMass.length, cols = myMass[0].length;
     double[][] temp = new double[cols][rows];
@@ -40,10 +40,9 @@ public class Main {
   }
 
   //поворот матрицы на 180 градусов против часов стрелки
-  public static void turn180Mass(double[][] myMass) {
-    if (myMass == null || myMass.length == 0) {
-      return;
-    }
+  public static void turn180Mass(double[][] myMass) throws myException {
+    if (myMass == null || myMass.length == 0) throw new myException("mass's length is not correct");
+
     if (myMass.length % 2 == 1) {
       for (int j = 0; j < myMass.length / 2; j++) {
         double temp = myMass[myMass.length / 2][j];
@@ -62,7 +61,7 @@ public class Main {
   }
 
   //поворот матрицы на 270 градусов против часов стрелки
-  public static void turn270Mass(double[][] myMass) {
+  public static void turn270Mass(double[][] myMass) throws myException {
     turn180Mass(myMass);
     turn90Mass(myMass);
   }
@@ -96,9 +95,14 @@ public class Main {
 
   public static void main(String[] args) {
     try {
-      Scanner scanner = new Scanner(new File("D:\\study\\POLYTEC\\ява\\лабы\\labs\\textFiles_matrixes\\src\\file.txt"));
+      File file = new File("D:\\study\\POLYTEC\\ява\\лабы\\labs\\textFiles_matrixes\\src\\file.txt");
+      if (file.exists() && !file.isDirectory()) {
+        throw new myException("the file does not exist!");
+      }
+      Scanner scanner = new Scanner(file);
       int N = scanner.nextInt();
-      if (N <= 0) throw new ArithmeticException();
+      if (N <= 0) throw new myException("N is less oe equal to 0");
+      if (N > 1000000) throw new myException("N over 1000000");
 
       double[][] myMass = new double[N][N];
 
