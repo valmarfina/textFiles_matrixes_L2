@@ -1,4 +1,6 @@
 import java.io.*;
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
@@ -19,12 +21,11 @@ public class Main {
   public static void printToFile(double[][] myMass, FileWriter writer) throws Exception {
     for (double[] elements : myMass)
       writer.write(Arrays.toString(elements) + '\n');
-
     writer.write('\n');
   }
 
   //поворот матрицы на 90 градусов против часов стрелки
-  public static void turn90Mass(double[][] myMass) throws Exception {
+  public static void turn90Mass(double[][] myMass) throws Exception, OutOfMemoryError {
     if (myMass.length == 0)
       throw new Exception("mass's length is not correct");
 
@@ -41,7 +42,7 @@ public class Main {
   }
 
   //поворот матрицы на 180 градусов против часов стрелки
-  public static void turn180Mass(double[][] myMass) throws Exception {
+  public static void turn180Mass(double[][] myMass) throws Exception, OutOfMemoryError {
     if (myMass == null || myMass.length == 0)
       throw new Exception("mass's length is not correct");
 
@@ -69,7 +70,7 @@ public class Main {
   }
 
   //деление элементов на сумму соседних
-  public static void division(double[][] myMass) throws DoNotDivideByZeroException {
+  public static void division(double[][] myMass) throws DoNotDivideByZeroException, OutOfMemoryError {
     double[][] temp = new double[myMass.length + 2][myMass.length + 2];
     for (int i = 0; i < myMass.length; i++)
       System.arraycopy(myMass[i], 0, temp[i + 1], 1, myMass.length);
@@ -78,12 +79,12 @@ public class Main {
     for (int i = 1; i < temp.length - 1; i++) {
       for (int j = 1; j < temp.length - 1; j++) {
         sum = temp[i - 1][j] + temp[i][j + 1] + temp[i + 1][j] + temp[i][j - 1];
-        if (sum == 0)
+        if (sum == 0) {
           throw new DoNotDivideByZeroException();
-        else
+        }
+        else {
           myMass[i - 1][j - 1] = roundNum(temp[i][j] / sum);
-        sum = 0;
-
+        }
       }
     }
   }
@@ -95,30 +96,53 @@ public class Main {
     return result;
   }
 
+  public static void isFileEmpty(File file) throws Exception {
+    if (file.length() == 0) {
+      throw new Exception("Файл пуст");
+    }
+  }
 
-  public static void main(String[] args) throws Exception {
+  public static boolean isNumeric(String str) {
+    NumberFormat formatter = NumberFormat.getInstance();
+    ParsePosition pos = new ParsePosition(0);
+    formatter.parse(str, pos);
+    return str.length() == pos.getIndex();
+  }
 
-    File file = new File("D:\\study\\POLYTEC\\ява\\лабы\\labs\\textFiles_matrixes\\src\\file.txt");
+  public static void readMyFile(File file) throws Exception {
+    //file = new File("D:\\study\\POLYTEC\\ява\\лабы\\labs\\textFiles_matrixes\\src\\file.txt");
+
     if (!file.exists() && !file.isDirectory())
       throw new TheFileDoesNotExist();
 
-    Scanner scanner = new Scanner(file);
-    int N = scanner.nextInt();
+    isFileEmpty(file);
+  }
+
+  public static void ckeckFileContent(int N) throws Exception {
 
     if (N == 0)
       throw new Exception("N is less oe equal to 0");
-
     if (N < 0)
       throw new NegativeArraySizeException("Массив с отрицательным размером");
-
     if (N > 1000000)
       throw new OverOneMillionException();
+  }
+
+
+
+  public static void main(String[] args) throws Exception {
+    File file = new File("D:\\study\\POLYTEC\\ява\\лабы\\labs\\textFiles_matrixes\\src\\file.txt");
+    int N;
+    readMyFile(file);
+
+    Scanner scanner = new Scanner(file);
+    N = scanner.nextInt();
+    ckeckFileContent(N);
 
     double[][] myMass = new double[N][N];
 
     //заполняем массив случайными числами от -N до N
     randomFill(myMass, N);
-
     FileWriter writer = new FileWriter("file_out.txt");
 
     writer.write("полученная матрица из элементов " + N + " на " + N + '\n');
